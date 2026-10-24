@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Kuliah Kampus</title>
-    <!-- Tailwind CSS untuk Desain Modern & Responsif -->
+    <title>Jadwal Kuliah & Daftar Dosen - UNIMUGO</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome untuk Ikon -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
@@ -15,28 +15,21 @@
     <header class="bg-slate-900 border-b border-slate-800 shadow-md sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-calendar-days text-indigo-400 text-2xl"></i>
-                <h1 class="text-xl font-bold tracking-wide">Jadwal Kuliah</h1>
+                <i class="fa-solid fa-graduation-cap text-indigo-400 text-2xl"></i>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wide">UNIMUGO Portal</h1>
+                    <p class="text-xs text-slate-400">Jadwal Kuliah & Daftar Dosen</p>
+                </div>
             </div>
             
-            <!-- DROPDOWN PILIHAN PRODI -->
-            <div class="w-full md:w-auto">
-                <select id="prodiSelect" class="w-full md:w-72 bg-slate-800 text-slate-100 font-medium px-4 py-2 rounded-lg border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="" disabled selected>-- Pilih Program Studi --</option>
-                    <option value="S1 TEKNOLOGI INFORMASI">S1 TEKNOLOGI INFORMASI</option>
-                    <option value="S1 TEKNIK INDUSTRI">S1 TEKNIK INDUSTRI</option>
-                    <option value="S1 HUKUM">S1 HUKUM</option>
-                    <option value="S1 MANAJEMEN">S1 MANAJEMEN</option>
-                    <option value="S1 ADMINISTRASI RS">S1 ADMINISTRASI RS</option>
-                    <option value="S1 FARMASI">S1 FARMASI</option>
-                    <option value="S1 KEBIDANAN">S1 KEBIDANAN</option>
-                    <option value="D3 KEBIDANAN">D3 KEBIDANAN</option>
-                    <option value="S1 KEPERAWATAN">S1 KEPERAWATAN</option>
-                    <option value="D3 KEPERAWATAN">D3 KEPERAWATAN</option>
-                    <option value="PROFESI APOTEKER">PROFESI APOTEKER</option>
-                    <option value="PROFESI BIDAN">PROFESI BIDAN</option>
-                    <option value="PROFESI NERS">PROFESI NERS</option>
-                </select>
+            <!-- TOMBOL TAB NAVIGASI -->
+            <div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700">
+                <button onclick="switchTab('jadwal')" id="tabJadwalBtn" class="px-4 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition shadow-sm">
+                    <i class="fa-solid fa-calendar-days mr-1"></i> Jadwal
+                </button>
+                <button onclick="switchTab('dosen')" id="tabDosenBtn" class="px-4 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition">
+                    <i class="fa-solid fa-chalkboard-user mr-1"></i> Dosen
+                </button>
             </div>
         </div>
     </header>
@@ -44,81 +37,145 @@
     <!-- KONTEN UTAMA -->
     <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow">
         
-        <!-- INFO HARI & PENCARIAN -->
-        <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-                <h2 id="currentDayTitle" class="text-xl font-bold text-slate-100">Semua Jadwal</h2>
-                <p id="currentLiveTime" class="text-sm text-slate-400">Memuat waktu...</p>
-            </div>
-            
-            <!-- Kolom Pencarian -->
-            <div class="w-full sm:w-64 relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <input type="text" id="searchInput" placeholder="Cari matkul, dosen..." class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
-            </div>
+        <!-- PILIHAN PRODI UTAMA (BERPENGARUH KE JADWAL & DOSEN) -->
+        <div class="mb-6">
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Pilih Program Studi:</label>
+            <select id="prodiSelect" class="w-full bg-slate-900 text-slate-100 font-medium px-4 py-2.5 rounded-lg border border-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                <option value="S1 TEKNOLOGI INFORMASI">S1 TEKNOLOGI INFORMASI</option>
+                <option value="S1 TEKNIK INDUSTRI">S1 TEKNIK INDUSTRI</option>
+                <option value="S1 HUKUM">S1 HUKUM</option>
+                <option value="S1 MANAJEMEN">S1 MANAJEMEN</option>
+                <option value="S1 ADMINISTRASI RUMAH SAKIT">S1 ADMINISTRASI RUMAH SAKIT</option>
+                <option value="S1 FARMASI">S1 FARMASI</option>
+                <option value="S1 KEBIDANAN">S1 KEBIDANAN</option>
+                <option value="D3 KEBIDANAN">D3 KEBIDANAN</option>
+                <option value="S1 KEPERAWATAN">S1 KEPERAWATAN</option>
+                <option value="D3 KEPERAWATAN">D3 KEPERAWATAN</option>
+                <option value="PROFESI APOTEKER">PROFESI APOTEKER</option>
+                <option value="PROFESI BIDAN">PROFESI BIDAN</option>
+                <option value="PROFESI NERS">PROFESI NERS</option>
+            </select>
         </div>
 
-        <!-- FILTER HARI (HORIZONTAL SCROLL DI HP) -->
-        <div class="flex overflow-x-auto pb-2 mb-6 gap-2 no-scrollbar">
-            <button onclick="filterDay('ALL')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white shrink-0 shadow-sm transition">Semua</button>
-            <button onclick="filterDay('Senin')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Senin</button>
-            <button onclick="filterDay('Selasa')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Selasa</button>
-            <button onclick="filterDay('Rabu')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Rabu</button>
-            <button onclick="filterDay('Kamis')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Kamis</button>
-            <button onclick="filterDay('Jumat')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Jumat</button>
-            <button onclick="filterDay('Sabtu')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Sabtu</button>
+        <!-- ================= VIEW 1: JADWAL KULIAH ================= -->
+        <div id="viewJadwal">
+            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">Jadwal Kuliah</h2>
+                    <p class="text-sm text-slate-400">Jadwal yang sudah lewat hari ini otomatis disembunyikan</p>
+                </div>
+                
+                <div class="w-full sm:w-64 relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Cari matkul, dosen..." class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                </div>
+            </div>
+
+            <!-- FILTER HARI (SENIN - MINGGU) -->
+            <div class="flex overflow-x-auto pb-2 mb-6 gap-2 no-scrollbar">
+                <button onclick="filterDay('ALL')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white shrink-0 shadow-sm transition">Semua</button>
+                <button onclick="filterDay('Senin')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Senin</button>
+                <button onclick="filterDay('Selasa')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Selasa</button>
+                <button onclick="filterDay('Rabu')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Rabu</button>
+                <button onclick="filterDay('Kamis')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Kamis</button>
+                <button onclick="filterDay('Jumat')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Jumat</button>
+                <button onclick="filterDay('Sabtu')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Sabtu</button>
+                <button onclick="filterDay('Minggu')" class="day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-slate-300 border border-slate-800 shrink-0 hover:bg-slate-800 transition">Minggu</button>
+            </div>
+
+            <!-- CONTAINER KARTU JADWAL -->
+            <div id="scheduleContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <!-- DAFTAR KARTU JADWAL -->
-        <div id="scheduleContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Data akan dimuat otomatis oleh JavaScript -->
+        <!-- ================= VIEW 2: DAFTAR DOSEN ================= -->
+        <div id="viewDosen" class="hidden">
+            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">Dosen Pengampu</h2>
+                    <p class="text-sm text-slate-400">Dosen tetap sesuai program studi yang dipilih</p>
+                </div>
+
+                <div class="w-full sm:w-64 relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="searchDosenInput" placeholder="Cari nama dosen..." class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                </div>
+            </div>
+
+            <!-- CONTAINER DAFTAR DOSEN -->
+            <div id="dosenContainer" class="space-y-4"></div>
         </div>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-400 mt-auto">
-        <p>&copy; <a href="https://www.instagram.com/figuringexistence" target="_blank" class="text-indigo-400 hover:underline font-medium">YudiTIF</a></p>
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-400 mt-auto flex flex-col sm:flex-row items-center justify-center gap-2">
+        <p>
+            <a href="https://wa.me/6287715079335?text=Halo%20Kak,%20saya%20ingin%20berdonasi%20untuk%20portal%20Jadwal%20kuliah%20UNIMUGO" target="_blank" class="text-emerald-400 hover:underline font-medium mr-2">
+                <i class="fa-brands fa-whatsapp mr-1"></i> Donasi via WhatsApp
+            </a> 
+            | &copy; <a href="https://www.instagram.com/figuringexistence" target="_blank" class="text-indigo-400 hover:underline font-medium ml-2">@YudiTIF</a> | Universitas Muhammadiyah Gombong
+        </p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- MEMANGGIL FILE DATA DOSEN -->
+    <script src="dosen.js"></script>
+
+    <!-- LOGIKA UTAMA WEBSITE -->
     <script>
-        // Simulasi Contoh Data (Nantinya diambil dari Google Sheets / Database Bot Telegram)
-        const sampleData = {
+        const sampleScheduleData = {
             "S1 TEKNOLOGI INFORMASI": [
-                { hari: "Senin", jamMulai: "08:00", jamSelesai: "10:30", matkul: "Pemrograman Web Lanjut", dosen: "Dr. Ahmad, M.Kom", ruang: "Lab Komputer 1" },
-                { hari: "Senin", jamMulai: "13:00", jamSelesai: "15:00", matkul: "Jaringan Komputer", dosen: "Siti Rahma, M.T", ruang: "Teori 2.1" },
-                { hari: "Selasa", jamMulai: "09:00", jamSelesai: "11:30", matkul: "Kecerdasan Buatan", dosen: "Budi Santoso, Ph.D", ruang: "Lab AI" },
-                { hari: "Rabu", jamMulai: "08:00", jamSelesai: "10:00", matkul: "Sistem Operasi", dosen: "Eko Prasetyo, M.Cs", ruang: "Teori 1.4" }
-            ],
-            "S1 MANAJEMEN": [
-                { hari: "Senin", jamMulai: "08:00", jamSelesai: "10:00", matkul: "Pengantar Manajemen", dosen: "Prof. Hendra, M.B.A", ruang: "Aula Utama" },
-                { hari: "Selasa", jamMulai: "10:00", jamSelesai: "12:30", matkul: "Akuntansi Keuangan", dosen: "Dewi Lestari, M.Ak", ruang: "Ruang 3.2" }
+                { hari: "Senin", jamMulai: "08:00", jamSelesai: "10:30", matkul: "Pemrograman Web Lanjut", dosen: "Muhammad As'ad", ruang: "Lab Komputer 1", zoomLink: "https://zoom.us/j/contohweb" },
+                { hari: "Selasa", jamMulai: "09:00", jamSelesai: "11:30", matkul: "Kecerdasan Buatan", dosen: "Aang Anwarudin", ruang: "Lab AI", zoomLink: "" }
             ]
         };
 
         let selectedProdi = localStorage.getItem("selectedProdi") || "S1 TEKNOLOGI INFORMASI";
         let activeFilterDay = "ALL";
+        let currentTab = 'jadwal';
 
         document.getElementById("prodiSelect").value = selectedProdi;
 
-        // Event listener saat prodi diganti
+        function switchTab(tab) {
+            currentTab = tab;
+            const viewJadwal = document.getElementById("viewJadwal");
+            const viewDosen = document.getElementById("viewDosen");
+            const tabJadwalBtn = document.getElementById("tabJadwalBtn");
+            const tabDosenBtn = document.getElementById("tabDosenBtn");
+
+            if (tab === 'jadwal') {
+                viewJadwal.classList.remove("hidden");
+                viewDosen.classList.add("hidden");
+                tabJadwalBtn.className = "px-4 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition shadow-sm";
+                tabDosenBtn.className = "px-4 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition";
+                renderSchedule();
+            } else {
+                viewJadwal.classList.add("hidden");
+                viewDosen.classList.remove("hidden");
+                tabDosenBtn.className = "px-4 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition shadow-sm";
+                tabJadwalBtn.className = "px-4 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition";
+                renderDosen();
+            }
+        }
+
         document.getElementById("prodiSelect").addEventListener("change", function(e) {
             selectedProdi = e.target.value;
             localStorage.setItem("selectedProdi", selectedProdi);
-            renderSchedule();
+            if (currentTab === 'jadwal') {
+                renderSchedule();
+            } else {
+                renderDosen();
+            }
         });
 
-        // Event listener pencarian
-        document.getElementById("searchInput").addEventListener("input", function() {
-            renderSchedule();
-        });
+        document.getElementById("searchInput").addEventListener("input", renderSchedule);
+        document.getElementById("searchDosenInput").addEventListener("input", renderDosen);
 
         function filterDay(day) {
             activeFilterDay = day;
-            // Update styling tombol aktif
             document.querySelectorAll(".day-btn").forEach(btn => {
                 if(btn.textContent.includes(day) || (day === 'ALL' && btn.textContent === 'Semua')) {
                     btn.className = "day-btn px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white shrink-0 shadow-sm transition";
@@ -129,16 +186,121 @@
             renderSchedule();
         }
 
+        function timeToMinutes(timeStr) {
+            const parts = timeStr.split(':');
+            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        }
+
         function renderSchedule() {
             const container = document.getElementById("scheduleContainer");
             const keyword = document.getElementById("searchInput").value.toLowerCase();
-            
-            let listJadwal = sampleData[selectedProdi] || [];
+            let listJadwal = sampleScheduleData[selectedProdi] || [];
 
-            // Filter berdasarkan hari
             if (activeFilterDay !== "ALL") {
                 listJadwal = listJadwal.filter(item => item.hari === activeFilterDay);
             }
 
-            // Filter berdasarkan pencarian
+            const now = new Date();
+            const daysIndo = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const todayName = daysIndo[now.getDay()];
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            listJadwal = listJadwal.filter(item => {
+                if (item.hari === todayName) {
+                    let endMinutes = timeToMinutes(item.jamSelesai);
+                    if (currentMinutes > endMinutes) return false;
+                }
+                return true;
+            });
+
             if (keyword) {
+                listJadwal = listJadwal.filter(item => 
+                    item.matkul.toLowerCase().includes(keyword) ||
+                    item.dosen.toLowerCase().includes(keyword) ||
+                    item.ruang.toLowerCase().includes(keyword) ||
+                    item.hari.toLowerCase().includes(keyword)
+                );
+            }
+
+            if (listJadwal.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-slate-900 rounded-xl border border-slate-800 shadow-sm">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-2"></i>
+                        <p class="text-slate-400 font-medium">Tidak ada jadwal kuliah yang aktif/ditemukan.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = listJadwal.map(item => `
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-sm hover:border-slate-700 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="px-2.5 py-1 bg-indigo-950 text-indigo-400 text-xs font-bold rounded-md border border-indigo-900/50">${item.hari}</span>
+                            <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2 py-1 rounded-md">
+                                <i class="fa-regular fa-clock mr-1 text-slate-400"></i> ${item.jamMulai} - ${item.jamSelesai}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 mb-1">${item.matkul}</h3>
+                        <p class="text-sm text-slate-400 mb-2"><i class="fa-solid fa-chalkboard-user mr-1 text-slate-500"></i> ${item.dosen}</p>
+                        <p class="text-xs text-slate-400 mb-4"><i class="fa-solid fa-location-dot mr-1 text-rose-400"></i> ${item.ruang}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                        <span class="text-indigo-400 font-medium">${selectedProdi}</span>
+                        ${item.zoomLink ? `
+                            <a href="${item.zoomLink}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm">
+                                <i class="fa-solid fa-video"></i> Zoom
+                            </a>
+                        ` : '<span class="text-slate-500 italic">Kelas Offline</span>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDosen() {
+            const container = document.getElementById("dosenContainer");
+            const keyword = document.getElementById("searchDosenInput").value.toLowerCase();
+
+            let prodiData = dosenData.find(item => item.prodi === selectedProdi);
+            
+            if (!prodiData) {
+                container.innerHTML = `<div class="text-center py-12 bg-slate-900 rounded-xl border border-slate-800 text-slate-400">Data dosen tidak ditemukan.</div>`;
+                return;
+            }
+
+            let listDosen = prodiData.dosen;
+
+            if (keyword) {
+                listDosen = listDosen.filter(d => d.toLowerCase().includes(keyword));
+            }
+
+            if (listDosen.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-slate-900 rounded-xl border border-slate-800 shadow-sm">
+                        <i class="fa-solid fa-user-slash text-4xl text-slate-600 mb-2"></i>
+                        <p class="text-slate-400 font-medium">Nama dosen tidak ditemukan di program studi ini.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-sm">
+                    <h3 class="text-indigo-400 font-bold text-base mb-4 pb-2 border-b border-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-xs"></i> ${prodiData.prodi}
+                    </h3>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-slate-300">
+                        ${listDosen.map(d => `
+                            <li class="flex items-center gap-2.5 bg-slate-950/50 px-3.5 py-2.5 rounded-lg border border-slate-800/50">
+                                <i class="fa-solid fa-user-tie text-indigo-400 text-xs"></i> ${d}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        renderSchedule();
+    </script>
+</body>
+</html>
