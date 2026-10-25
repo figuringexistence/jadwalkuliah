@@ -36,7 +36,7 @@
 </head>
 <body style="background-color: #0f1117; color: #ffffff; font-family: sans-serif; margin: 0; padding: 20px;">
 
-    <div class="container" style="max-width: 900px; margin: 0 auto;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding-bottom: 40px;">
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <a href="../" style="color: #8ab4f8; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
@@ -52,7 +52,7 @@
                 </button>
             </div>
 
-            <!-- TOMBOL TAMBAH JADWAL (DIKUNCI HANYA UNTUK PEMBUAT) -->
+            <!-- TOMBOL TAMBAH JADWAL (HANYA MUNCUL JIKA PEMBUAT) -->
             <div id="btnTambahContainer"></div>
         </div>
 
@@ -132,6 +132,20 @@
             <div id="dosenContainer" style="background-color: #161922; border: 1px solid #1e2230; border-radius: 14px; padding: 20px;"></div>
         </div>
 
+        <!-- ================= FOOTER (COPYRIGHT & TOMBOL DONASI) ================= -->
+        <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #1e2230; display: flex; flex-direction: column; align-items: center; gap: 15px; text-align: center;">
+            
+            <!-- Tombol Donasi WhatsApp -->
+            <a href="https://api.whatsapp.com/send/?phone=6287715079335&text=Halo+Kak%2C+saya+ingin+berdonasi+untuk+portal+Jadwal+kuliah+UNIMUGO&type=phone_number&app_absent=0" target="_blank" style="background-color: #25d366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); transition: 0.2s;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Donasi Portal Jadwal Kuliah
+            </a>
+
+            <!-- Copyright & Link Instagram -->
+            <p style="margin: 0; font-size: 13px; color: #a0aec0;">
+                Copyright@<a href="https://www.instagram.com/figuringexistence" target="_blank" style="color: #8ab4f8; text-decoration: none; font-weight: 600;">YudiTIF</a>
+            </p>
+        </div>
+
     </div>
 
     <script src="dosen.js"></script>
@@ -159,7 +173,7 @@
                 btnDosen.style.backgroundColor = "#3b82f6";
                 btnDosen.style.color = "white";
                 btnJadwal.style.backgroundColor = "transparent";
-                btnJadwal.style.color = "#a0aec0";
+                btnDosen.style.color = "#a0aec0";
                 renderDosen();
             }
         }
@@ -176,21 +190,20 @@
         async function cekHakAksesTambah() {
             const containerBtn = document.getElementById("btnTambahContainer");
             const currentUser = getActiveUser();
+            const hasAuthToken = localStorage.getItem("unimugoIsCreator");
 
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, "jadwalKuliah"));
-                let isCreator = false;
-                let totalJadwal = 0;
+                let isCreator = hasAuthToken === "true";
 
                 querySnapshot.forEach((d) => {
-                    totalJadwal++;
                     const data = d.data();
                     if (data.createdBy === currentUser) {
                         isCreator = true;
                     }
                 });
 
-                if (totalJadwal === 0 || isCreator) {
+                if (isCreator) {
                     containerBtn.innerHTML = `
                         <a href="input.html" style="background-color: #22c55e; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
                             <i class="fa-solid fa-plus"></i> Tambah Jadwal Baru
@@ -201,6 +214,7 @@
                 }
             } catch (e) {
                 console.error("Gagal cek hak akses:", e);
+                containerBtn.innerHTML = "";
             }
         }
 
@@ -240,7 +254,6 @@
             await cekHakAksesTambah();
         });
 
-        // Fallback jika event sudah terlewat
         window.onload = async function() {
             setTimeout(async () => {
                 await cekHakAksesTambah();
@@ -385,15 +398,4 @@
             if (confirm("Apakah Anda yakin ingin menghapus jadwal ini secara online?")) {
                 try {
                     await window.deleteDoc(window.doc(window.db, "jadwalKuliah", id));
-                    alert("Jadwal berhasil dihapus dari server!");
-                    updateRuanganDropdown();
-                    renderJadwal();
-                } catch (error) {
-                    console.error("Gagal menghapus:", error);
-                    alert("Gagal menghapus data dari server.");
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+                    alert("Jadwal berhasil
