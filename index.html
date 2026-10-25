@@ -12,16 +12,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Ganti dengan konfigurasi Firebase Anda
-      const firebaseConfig = {
-    apiKey: "AIzaSyBdsCzOFNpVKSwcQ1SdAulPuYwby_KeFpg",
-    authDomain: "tif-social.firebaseapp.com",
-    projectId: "tif-social",
-    storageBucket: "tif-social.firebasestorage.app",
-    messagingSenderId: "852033430946",
-    appId: "1:852033430946:web:4b48c434427710db34befb",
-    measurementId: "G-GTFD75TYMT"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyBdsCzOFNpVKSwcQ1SdAulPuYwby_KeFpg",
+            authDomain: "tif-social.firebaseapp.com",
+            projectId: "tif-social",
+            storageBucket: "tif-social.firebasestorage.app",
+            messagingSenderId: "852033430946",
+            appId: "1:852033430946:web:4b48c434427710db34befb",
+            measurementId: "G-GTFD75TYMT"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -32,7 +31,6 @@
         window.deleteDoc = deleteDoc;
         window.doc = doc;
 
-        // Panggil inisialisasi render setelah script siap
         document.dispatchEvent(new Event("firebase-loaded"));
     </script>
 </head>
@@ -54,9 +52,8 @@
                 </button>
             </div>
 
-            <a href="input.html" style="background-color: #22c55e; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
-                <i class="fa-solid fa-plus"></i> Tambah Jadwal Baru
-            </a>
+            <!-- TOMBOL TAMBAH JADWAL (DIKUNCI HANYA UNTUK PEMBUAT) -->
+            <div id="btnTambahContainer"></div>
         </div>
 
         <!-- ================= VIEW 1: JADWAL KULIAH ================= -->
@@ -176,7 +173,37 @@
             return user;
         }
 
-        // Ambil data langsung dari Firestore secara online
+        async function cekHakAksesTambah() {
+            const containerBtn = document.getElementById("btnTambahContainer");
+            const currentUser = getActiveUser();
+
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, "jadwalKuliah"));
+                let isCreator = false;
+                let totalJadwal = 0;
+
+                querySnapshot.forEach((d) => {
+                    totalJadwal++;
+                    const data = d.data();
+                    if (data.createdBy === currentUser) {
+                        isCreator = true;
+                    }
+                });
+
+                if (totalJadwal === 0 || isCreator) {
+                    containerBtn.innerHTML = `
+                        <a href="input.html" style="background-color: #22c55e; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-plus"></i> Tambah Jadwal Baru
+                        </a>
+                    `;
+                } else {
+                    containerBtn.innerHTML = "";
+                }
+            } catch (e) {
+                console.error("Gagal cek hak akses:", e);
+            }
+        }
+
         async function ambilDataJadwalOnline() {
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, "jadwalKuliah"));
@@ -186,7 +213,6 @@
                 querySnapshot.forEach((d) => {
                     const item = { id: d.id, ...d.data() };
                     
-                    // Cek auto-hapus jika sudah kedaluwarsa tanggal & jam selesainya
                     if (item.tanggal && item.jam) {
                         try {
                             const parts = item.jam.split("-");
@@ -194,9 +220,8 @@
                                 const jamSelesaiStr = parts[1].trim().replace(".", ":");
                                 const waktuSelesaiKuliah = new Date(`${item.tanggal}T${jamSelesaiStr}:00`);
                                 if (sekarang > waktuSelesaiKuliah) {
-                                    // Hapus otomatis dari database jika kedaluwarsa
                                     window.deleteDoc(window.doc(window.db, "jadwalKuliah", item.id));
-                                    return; // Lewati masukkan ke array
+                                    return;
                                 }
                             }
                         } catch (e) {}
@@ -210,6 +235,17 @@
                 return [];
             }
         }
+
+        document.addEventListener("firebase-loaded", async () => {
+            await cekHakAksesTambah();
+        });
+
+        // Fallback jika event sudah terlewat
+        window.onload = async function() {
+            setTimeout(async () => {
+                await cekHakAksesTambah();
+            }, 500);
+        };
 
         function onProdiFilterChange() {
             const selectedProdi = document.getElementById("selectProdiFilter").value;
@@ -271,7 +307,6 @@
                     actionBtn = `<a href="${item.ruang}" target="_blank" style="background-color: #2563eb; color: white; padding: 6px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 500;">Zoom</a>`;
                 }
 
-                // Tombol Hapus HANYA MUNCUL jika perangkat ini adalah pembuat jadwal tersebut
                 let deleteBtnHtml = "";
                 if (!item.createdBy || item.createdBy === currentUser) {
                     deleteBtnHtml = `
