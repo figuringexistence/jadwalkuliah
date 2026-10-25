@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Jadwal Kuliah - UNIMUGO</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #0f1117; color: #ffffff; font-family: sans-serif; margin: 0; padding: 20px;">
+
+    <div class="container" style="max-width: 600px; margin: 0 auto;">
+        
+        <!-- Tombol Kembali -->
+        <div style="margin-bottom: 20px;">
+            <a href="index.html" style="color: #8ab4f8; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-arrow-left"></i> Lihat Daftar Jadwal
+            </a>
+        </div>
+
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Tambah Jadwal Kuliah Baru</h1>
+        <p style="color: #a0aec0; font-size: 14px; margin-bottom: 20px;">Isi formulir di bawah ini dengan lengkap.</p>
+
+        <!-- FORM INPUT -->
+        <div class="form-card" style="background-color: #161922; padding: 20px; border-radius: 14px; border: 1px solid #1e2230;">
+            <form id="formJadwal">
+                
+                <!-- 1. Pilih Prodi -->
+                <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Program Studi:</label>
+                <select id="inputProdi" onchange="updateDosenDropdown()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
+                    <option value="">-- Pilih Program Studi --</option>
+                    <option value="S1 TEKNOLOGI INFORMASI">S1 Teknologi Informasi</option>
+                    <option value="S1 TEKNIK INDUSTRI">S1 Teknik Industri</option>
+                    <option value="S1 HUKUM">S1 Hukum</option>
+                    <option value="S1 MANAJEMEN">S1 Manajemen</option>
+                    <option value="S1 ADMINISTRASI RUMAH SAKIT">S1 Administrasi Rumah Sakit</option>
+                    <option value="S1 FARMASI">S1 Farmasi</option>
+                    <option value="S1 KEBIDANAN">S1 Kebidanan</option>
+                    <option value="D3 KEBIDANAN">D3 Kebidanan</option>
+                    <option value="S1 KEPERAWATAN">S1 Keperawatan</option>
+                    <option value="D3 KEPERAWATAN">D3 Keperawatan</option>
+                    <option value="PROFESI APOTEKER">Profesi Apoteker</option>
+                    <option value="PROFESI BIDAN">Profesi Bidan</option>
+                    <option value="PROFESI NERS">Profesi Ners</option>
+                </select>
+
+                <!-- 2. Mata Kuliah -->
+                <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Mata Kuliah:</label>
+                <input type="text" id="inputMatkul" placeholder="Contoh: Pemrograman Web Lanjut" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
+
+                <!-- 3. Dosen Pengampu & Input Manual -->
+                <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Dosen Pengampu:</label>
+                <select id="selectDosen" onchange="cekDosenManual()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
+                    <option value="">-- Pilih Dosen Pengampu --</option>
+                </select>
+                <input type="text" id="inputDosenManual" placeholder="Ketik nama lengkap dosen..." style="display:none; margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
+
+                <!-- 4. Tanggal, Hari & Jam -->
+                <div style="margin-top: 12px;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Tanggal Kuliah:</label>
+                    <input type="date" id="inputTanggal" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 12px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Hari:</label>
+                        <select id="inputHari" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                            <option value="Minggu">Minggu</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Jam Kuliah:</label>
+                        <select id="selectJam" onchange="cekJamManual()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
+                            <option value="">-- Pilih Jam --</option>
+                            <option value="07.00 - 08.40">07.00 - 08.40</option>
+                            <option value="09.10 - 10.50">09.10 - 10.50</option>
+                            <option value="12.40 - 14.20">12.40 - 14.20</option>
+                            <option value="13.30 - 15.10">13.30 - 15.10</option>
+                            <option value="15.30 - 17.10">15.30 - 17.10</option>
+                            <option value="lainnya">Lainnya (Ketik Manual)</option>
+                        </select>
+                        <input type="text" id="inputJamManual" placeholder="Contoh: 08:00 - 10:30" style="display:none; margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <!-- 5. Kelas / Ruangan / Zoom -->
+                <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Tipe Kelas / Ruangan / Link Zoom:</label>
+                <select id="selectTipeRuang" onchange="cekRuangManual()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
+                    <option value="">-- Pilih Ruangan / Tipe --</option>
+                    <option value="Lab Komputer 1">Lab Komputer 1 (Offline)</option>
+                    <option value="Kelas Offline">Kelas Offline Lainnya</option>
+                    <option value="zoom">Link Zoom / Online</option>
+                </select>
+                <input type="text" id="inputRuangManual" placeholder="Masukkan Nama Ruangan / Link Zoom..." style="display:none; margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
+
+                <button type="submit" style="margin-top: 25px; background-color: #22c55e; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Simpan dan Tampilkan Jadwal</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- MEMANGGIL FILE DATA DOSEN -->
+    <script src="dosen.js"></script>
+
+    <script>
+        function updateDosenDropdown() {
+            const selectedProdi = document.getElementById("inputProdi").value;
+            const selectDosen = document.getElementById("selectDosen");
+            
+            selectDosen.innerHTML = '<option value="">-- Pilih Dosen Pengampu --</option>';
+
+            if (!selectedProdi) return;
+
+            if (typeof dosenData !== 'undefined') {
+                const prodiFound = dosenData.find(item => item.prodi === selectedProdi);
+
+                if (prodiFound && prodiFound.dosen) {
+                    prodiFound.dosen.forEach(namaDosen => {
+                        const opt = document.createElement("option");
+                        opt.value = namaDosen;
+                        opt.textContent = namaDosen;
+                        selectDosen.appendChild(opt);
+                    });
+                }
+            }
+
+            const optLain = document.createElement("option");
+            optLain.value = "lainnya";
+            optLain.textContent = "Lainnya (Ketik Manual)";
+            selectDosen.appendChild(optLain);
+            
+            document.getElementById("inputDosenManual").style.display = "none";
+            document.getElementById("inputDosenManual").required = false;
+        }
+
+        function cekDosenManual() {
+            const select = document.getElementById("selectDosen");
+            const manual = document.getElementById("inputDosenManual");
+            if (select.value === "lainnya") {
+                manual.style.display = "block";
+                manual.required = true;
+            } else {
+                manual.style.display = "none";
+                manual.required = false;
+                manual.value = "";
+            }
+        }
+
+        function cekJamManual() {
+            const select = document.getElementById("selectJam");
+            const manual = document.getElementById("inputJamManual");
+            if (select.value === "lainnya") {
+                manual.style.display = "block";
+                manual.required = true;
+            } else {
+                manual.style.display = "none";
+                manual.required = false;
+                manual.value = "";
+            }
+        }
+
+        function cekRuangManual() {
+            const select = document.getElementById("selectTipeRuang");
+            const manual = document.getElementById("inputRuangManual");
+            if (select.value === "zoom" || select.value === "Kelas Offline") {
+                manual.style.display = "block";
+                manual.required = true;
+                manual.placeholder = select.value === "zoom" ? "Tempel Link Zoom di sini (https://...)" : "Ketik nama ruangan...";
+            } else {
+                manual.style.display = "none";
+                manual.required = false;
+                manual.value = "";
+            }
+        }
+
+        function getActiveUser() {
+            let user = localStorage.getItem("unimugoActiveUser");
+            if (!user) {
+                user = "user_" + Math.random().toString(36).substring(2, 9);
+                localStorage.setItem("unimugoActiveUser", user);
+            }
+            return user;
+        }
+
+        window.onload = function() {
+            updateDosenDropdown();
+        };
+
+        document.getElementById("formJadwal").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const prodiBaru = document.getElementById("inputProdi").value;
+            const matkul = document.getElementById("inputMatkul").value;
+            
+            let dosen = document.getElementById("selectDosen").value;
+            if (dosen === "lainnya") {
+                dosen = document.getElementById("inputDosenManual").value;
+            }
+
+            const tanggal = document.getElementById("inputTanggal").value;
+            const hari = document.getElementById("inputHari").value;
+            
+            let jam = document.getElementById("selectJam").value;
+            if (jam === "lainnya") {
+                jam = document.getElementById("inputJamManual").value;
+            }
+
+            let selectRuangVal = document.getElementById("selectTipeRuang").value;
+            let ruang = selectRuangVal;
+            if (selectRuangVal === "zoom" || selectRuangVal === "Kelas Offline") {
+                ruang = document.getElementById("inputRuangManual").value;
+            }
+
+            const isZoom = ruang.toLowerCase().includes("http") || ruang.toLowerCase().includes("zoom");
+
+            let daftarJadwal = localStorage.getItem("daftarJadwalUnimugo");
+            daftarJadwal = daftarJadwal ? JSON.parse(daftarJadwal) : [];
+
+            // Deteksi Kelas Gabungan (Tanggal, Hari, Jam, Ruangan, dan Mata Kuliah sama persis)
+            let jadwalExist = daftarJadwal.find(item => 
+                item.tanggal === tanggal &&
+                item.hari.toLowerCase() === hari.toLowerCase() && 
+                item.jam.toLowerCase() === jam.toLowerCase() && 
+                item.ruang.toLowerCase() === ruang.toLowerCase() &&
+                item.matkul.toLowerCase() === matkul.toLowerCase()
+            );
+
+            if (jadwalExist) {
+                if (!jadwalExist.prodi.includes(prodiBaru)) {
+                    jadwalExist.prodi += " & " + prodiBaru;
+                }
+                alert("Kelas gabungan terdeteksi! Prodi berhasil digabungkan ke jadwal yang sama.");
+            } else {
+                const jadwalBaru = {
+                    id: Date.now(),
+                    prodi: prodiBaru,
+                    matkul,
+                    dosen,
+                    tanggal,
+                    hari,
+                    jam,
+                    ruang,
+                    isZoom,
+                    createdBy: getActiveUser()
+                };
+                daftarJadwal.push(jadwalBaru);
+                alert("Jadwal berhasil disimpan!");
+            }
+
+            localStorage.setItem("daftarJadwalUnimugo", JSON.stringify(daftarJadwal));
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
