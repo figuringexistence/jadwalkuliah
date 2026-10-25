@@ -6,12 +6,39 @@
     <title>Input Jadwal Kuliah - UNIMUGO</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK Modular -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Ganti dengan konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "MASUKKAN_API_KEY_ANDA",
+            authDomain: "PROJECT_ID.firebaseapp.com",
+            projectId: "PROJECT_ID",
+            storageBucket: "PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.query = query;
+        window.where = where;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
+    </script>
 </head>
 <body style="background-color: #0f1117; color: #ffffff; font-family: sans-serif; margin: 0; padding: 20px;">
 
     <div class="container" style="max-width: 600px; margin: 0 auto;">
         
-        <!-- Tombol Kembali -->
         <div style="margin-bottom: 20px;">
             <a href="index.html" style="color: #8ab4f8; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
                 <i class="fa-solid fa-arrow-left"></i> Lihat Daftar Jadwal
@@ -21,11 +48,9 @@
         <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Tambah Jadwal Kuliah Baru</h1>
         <p style="color: #a0aec0; font-size: 14px; margin-bottom: 20px;">Isi formulir di bawah ini dengan lengkap.</p>
 
-        <!-- FORM INPUT -->
         <div class="form-card" style="background-color: #161922; padding: 20px; border-radius: 14px; border: 1px solid #1e2230;">
             <form id="formJadwal">
                 
-                <!-- 1. Pilih Prodi -->
                 <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Program Studi:</label>
                 <select id="inputProdi" onchange="updateDosenDropdown()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
                     <option value="">-- Pilih Program Studi --</option>
@@ -44,18 +69,15 @@
                     <option value="PROFESI NERS">Profesi Ners</option>
                 </select>
 
-                <!-- 2. Mata Kuliah -->
                 <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Mata Kuliah:</label>
                 <input type="text" id="inputMatkul" placeholder="Contoh: Pemrograman Web Lanjut" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
 
-                <!-- 3. Dosen Pengampu & Input Manual -->
                 <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Dosen Pengampu:</label>
                 <select id="selectDosen" onchange="cekDosenManual()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
                     <option value="">-- Pilih Dosen Pengampu --</option>
                 </select>
                 <input type="text" id="inputDosenManual" placeholder="Ketik nama lengkap dosen..." style="display:none; margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
 
-                <!-- 4. Tanggal, Hari & Jam -->
                 <div style="margin-top: 12px;">
                     <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Tanggal Kuliah:</label>
                     <input type="date" id="inputTanggal" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px; box-sizing: border-box;">
@@ -89,7 +111,6 @@
                     </div>
                 </div>
 
-                <!-- 5. Kelas / Ruangan / Zoom -->
                 <label style="display: block; margin-top: 12px; margin-bottom: 5px; font-size: 14px; color: #cbd5e1;">Tipe Kelas / Ruangan / Link Zoom:</label>
                 <select id="selectTipeRuang" onchange="cekRuangManual()" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2d3748; background-color: #0f1117; color: white; font-size: 14px;">
                     <option value="">-- Pilih Ruangan / Tipe --</option>
@@ -105,21 +126,17 @@
 
     </div>
 
-    <!-- MEMANGGIL FILE DATA DOSEN -->
     <script src="dosen.js"></script>
 
     <script>
         function updateDosenDropdown() {
             const selectedProdi = document.getElementById("inputProdi").value;
             const selectDosen = document.getElementById("selectDosen");
-            
             selectDosen.innerHTML = '<option value="">-- Pilih Dosen Pengampu --</option>';
-
             if (!selectedProdi) return;
 
             if (typeof dosenData !== 'undefined') {
                 const prodiFound = dosenData.find(item => item.prodi === selectedProdi);
-
                 if (prodiFound && prodiFound.dosen) {
                     prodiFound.dosen.forEach(namaDosen => {
                         const opt = document.createElement("option");
@@ -129,54 +146,33 @@
                     });
                 }
             }
-
             const optLain = document.createElement("option");
             optLain.value = "lainnya";
             optLain.textContent = "Lainnya (Ketik Manual)";
             selectDosen.appendChild(optLain);
-            
-            document.getElementById("inputDosenManual").style.display = "none";
-            document.getElementById("inputDosenManual").required = false;
         }
 
         function cekDosenManual() {
             const select = document.getElementById("selectDosen");
             const manual = document.getElementById("inputDosenManual");
-            if (select.value === "lainnya") {
-                manual.style.display = "block";
-                manual.required = true;
-            } else {
-                manual.style.display = "none";
-                manual.required = false;
-                manual.value = "";
-            }
+            manual.style.display = select.value === "lainnya" ? "block" : "none";
+            manual.required = select.value === "lainnya";
         }
 
         function cekJamManual() {
             const select = document.getElementById("selectJam");
             const manual = document.getElementById("inputJamManual");
-            if (select.value === "lainnya") {
-                manual.style.display = "block";
-                manual.required = true;
-            } else {
-                manual.style.display = "none";
-                manual.required = false;
-                manual.value = "";
-            }
+            manual.style.display = select.value === "lainnya" ? "block" : "none";
+            manual.required = select.value === "lainnya";
         }
 
         function cekRuangManual() {
             const select = document.getElementById("selectTipeRuang");
             const manual = document.getElementById("inputRuangManual");
-            if (select.value === "zoom" || select.value === "Kelas Offline") {
-                manual.style.display = "block";
-                manual.required = true;
-                manual.placeholder = select.value === "zoom" ? "Tempel Link Zoom di sini (https://...)" : "Ketik nama ruangan...";
-            } else {
-                manual.style.display = "none";
-                manual.required = false;
-                manual.value = "";
-            }
+            const isManual = select.value === "zoom" || select.value === "Kelas Offline";
+            manual.style.display = isManual ? "block" : "none";
+            manual.required = isManual;
+            manual.placeholder = select.value === "zoom" ? "Tempel Link Zoom (https://...)" : "Ketik nama ruangan...";
         }
 
         function getActiveUser() {
@@ -192,69 +188,68 @@
             updateDosenDropdown();
         };
 
-        document.getElementById("formJadwal").addEventListener("submit", function(e) {
+        document.getElementById("formJadwal").addEventListener("submit", async function(e) {
             e.preventDefault();
 
             const prodiBaru = document.getElementById("inputProdi").value;
             const matkul = document.getElementById("inputMatkul").value;
-            
-            let dosen = document.getElementById("selectDosen").value;
-            if (dosen === "lainnya") {
-                dosen = document.getElementById("inputDosenManual").value;
-            }
-
+            let dosen = document.getElementById("selectDosen").value === "lainnya" ? document.getElementById("inputDosenManual").value : document.getElementById("selectDosen").value;
             const tanggal = document.getElementById("inputTanggal").value;
             const hari = document.getElementById("inputHari").value;
-            
-            let jam = document.getElementById("selectJam").value;
-            if (jam === "lainnya") {
-                jam = document.getElementById("inputJamManual").value;
-            }
-
-            let selectRuangVal = document.getElementById("selectTipeRuang").value;
-            let ruang = selectRuangVal;
-            if (selectRuangVal === "zoom" || selectRuangVal === "Kelas Offline") {
+            let jam = document.getElementById("selectJam").value === "lainnya" ? document.getElementById("inputJamManual").value : document.getElementById("selectJam").value;
+            let ruang = document.getElementById("selectTipeRuang").value;
+            if (ruang === "zoom" || ruang === "Kelas Offline") {
                 ruang = document.getElementById("inputRuangManual").value;
             }
-
             const isZoom = ruang.toLowerCase().includes("http") || ruang.toLowerCase().includes("zoom");
 
-            let daftarJadwal = localStorage.getItem("daftarJadwalUnimugo");
-            daftarJadwal = daftarJadwal ? JSON.parse(daftarJadwal) : [];
+            try {
+                // Ambil data online untuk cek kelas gabungan
+                const querySnapshot = await window.getDocs(window.collection(window.db, "jadwalKuliah"));
+                let existingDocId = null;
+                let existingProdi = "";
 
-            // Deteksi Kelas Gabungan (Tanggal, Hari, Jam, Ruangan, dan Mata Kuliah sama persis)
-            let jadwalExist = daftarJadwal.find(item => 
-                item.tanggal === tanggal &&
-                item.hari.toLowerCase() === hari.toLowerCase() && 
-                item.jam.toLowerCase() === jam.toLowerCase() && 
-                item.ruang.toLowerCase() === ruang.toLowerCase() &&
-                item.matkul.toLowerCase() === matkul.toLowerCase()
-            );
+                querySnapshot.forEach((d) => {
+                    const data = d.data();
+                    if (data.tanggal === tanggal &&
+                        data.hari.toLowerCase() === hari.toLowerCase() &&
+                        data.jam.toLowerCase() === jam.toLowerCase() &&
+                        data.ruang.toLowerCase() === ruang.toLowerCase() &&
+                        data.matkul.toLowerCase() === matkul.toLowerCase()) {
+                        existingDocId = d.id;
+                        existingProdi = data.prodi;
+                    }
+                });
 
-            if (jadwalExist) {
-                if (!jadwalExist.prodi.includes(prodiBaru)) {
-                    jadwalExist.prodi += " & " + prodiBaru;
+                if (existingDocId) {
+                    // Jika kelas gabungan ditemukan, update prodinya secara online
+                    if (!existingProdi.includes(prodiBaru)) {
+                        const updatedProdi = existingProdi + " & " + prodiBaru;
+                        await window.updateDoc(window.doc(window.db, "jadwalKuliah", existingDocId), { prodi: updatedProdi });
+                    }
+                    alert("Kelas gabungan terdeteksi! Prodi berhasil digabungkan secara online.");
+                } else {
+                    // Buat jadwal baru di Firestore
+                    await window.addDoc(window.collection(window.db, "jadwalKuliah"), {
+                        prodi: prodiBaru,
+                        matkul,
+                        dosen,
+                        tanggal,
+                        hari,
+                        jam,
+                        ruang,
+                        isZoom,
+                        createdBy: getActiveUser(),
+                        createdAt: Date.now()
+                    });
+                    alert("Jadwal berhasil disimpan secara online!");
                 }
-                alert("Kelas gabungan terdeteksi! Prodi berhasil digabungkan ke jadwal yang sama.");
-            } else {
-                const jadwalBaru = {
-                    id: Date.now(),
-                    prodi: prodiBaru,
-                    matkul,
-                    dosen,
-                    tanggal,
-                    hari,
-                    jam,
-                    ruang,
-                    isZoom,
-                    createdBy: getActiveUser()
-                };
-                daftarJadwal.push(jadwalBaru);
-                alert("Jadwal berhasil disimpan!");
-            }
 
-            localStorage.setItem("daftarJadwalUnimugo", JSON.stringify(daftarJadwal));
-            window.location.href = "index.html";
+                window.location.href = "index.html";
+            } catch (error) {
+                console.error("Gagal menyimpan:", error);
+                alert("Terjadi kesalahan saat menyimpan data ke server.");
+            }
         });
     </script>
 </body>
