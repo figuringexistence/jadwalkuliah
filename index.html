@@ -43,14 +43,21 @@
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda Utama
             </a>
             
+            
+
             <div style="display: flex; background-color: #161922; padding: 4px; border-radius: 10px; border: 1px solid #1e2230;">
                 <button onclick="switchTab('jadwal')" id="tabJadwalBtn" style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; background-color: #3b82f6; color: white; border: none; cursor: pointer; transition: 0.2s;">
                     <i class="fa-solid fa-calendar-days mr-1"></i> Jadwal Kuliah
+                </button>
+                <button onclick="switchTab('mengajar')" id="tabMengajarBtn" style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; background-color: transparent; color: #a0aec0; border: none; cursor: pointer; transition: 0.2s;">
+                    <i class="fa-solid fa-chalkboard mr-1"></i> Jadwal Mengajar
                 </button>
                 <button onclick="switchTab('dosen')" id="tabDosenBtn" style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; background-color: transparent; color: #a0aec0; border: none; cursor: pointer; transition: 0.2s;">
                     <i class="fa-solid fa-chalkboard-user mr-1"></i> Dosen
                 </button>
             </div>
+
+            
 
             <!-- TOMBOL TAMBAH JADWAL (HANYA MUNCUL JIKA PEMBUAT) -->
             <div id="btnTambahContainer"></div>
