@@ -1,7 +1,6 @@
 // viewcount.js - Skrip untuk penghitung jumlah kunjungan halaman
 async function inisialisasiViewCount() {
     try {
-        // Menggunakan API penghitung kunjungan gratis
         const response = await fetch(`https://api.countapi.xyz/hit/unimugo-jadwal-kuliah/total-visits`);
         const data = await response.json();
         
@@ -18,7 +17,6 @@ async function inisialisasiViewCount() {
     }
 }
 
-// Otomatis jalankan saat halaman selesai dimuat
 document.addEventListener("DOMContentLoaded", () => {
     inisialisasiViewCount();
 });
