@@ -316,6 +316,12 @@
                 return matchProdi && matchHari && matchRuang;
             });
 
+                filtered.sort((a, b) => {
+        let jamA = (a.jam || "").trim();
+        let jamB = (b.jam || "").trim();
+        return jamA.localeCompare(jamB);
+    });
+
 
             if (filtered.length === 0) {
                 container.innerHTML = `<p style="color: #a0aec0; grid-column: 1/-1; text-align: center; padding: 30px;">Belum ada jadwal tersimpan untuk Program Studi ini atau jadwal telah kedaluwarsa.</p>`;
