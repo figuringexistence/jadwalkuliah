@@ -277,21 +277,27 @@
         }
 
         async function updateRuanganDropdown() {
-            const selectedProdi = document.getElementById("selectProdiFilter").value;
-            const daftarJadwal = await ambilDataJadwalOnline();
-            const selectRuang = document.getElementById("filterRuang");
-            
-            const prodiJadwal = daftarJadwal.filter(item => item.prodi.toUpperCase().includes(selectedProdi.toUpperCase()));
-            const ruanganUnik = [...new Set(prodiJadwal.map(item => item.ruang))];
+    const selectedProdi = document.getElementById("selectProdiFilter").value;
+    const daftarJadwal = await ambilDataJadwalOnline();
+    const selectRuang = document.getElementById("filterRuang");
+    
+    // PERBARUI DI SINI:
+    const prodiJadwal = daftarJadwal.filter(item => {
+        if (selectedProdi === "Semua Program Studi") return true;
+        return item.prodi.toUpperCase().includes(selectedProdi.toUpperCase());
+    });
+    
+    const ruanganUnik = [...new Set(prodiJadwal.map(item => item.ruang))];
 
-            selectRuang.innerHTML = '<option value="Semua">-- Semua Ruangan / Lokasi --</option>';
-            ruanganUnik.forEach(ruang => {
-                const opt = document.createElement("option");
-                opt.value = ruang;
-                opt.textContent = ruang;
-                selectRuang.appendChild(opt);
-            });
-        }
+    selectRuang.innerHTML = '<option value="Semua">-- Semua Ruangan / Lokasi --</option>';
+    ruanganUnik.forEach(ruang => {
+        const opt = document.createElement("option");
+        opt.value = ruang;
+        opt.textContent = ruang;
+        selectRuang.appendChild(opt);
+    });
+}
+
 
         async function renderJadwal() {
             const container = document.getElementById("jadwalContainer");
@@ -303,12 +309,13 @@
             const daftarJadwal = await ambilDataJadwalOnline();
             const currentUser = getActiveUser();
 
-            const filtered = daftarJadwal.filter(item => {
-                const matchProdi = item.prodi.toUpperCase().includes(selectedProdi.toUpperCase());
+                const filtered = daftarJadwal.filter(item => {
+                const matchProdi = (selectedProdi === "Semua Program Studi") || item.prodi.toUpperCase().includes(selectedProdi.toUpperCase());
                 const matchHari = (currentFilterHari === "Semua" || item.hari === currentFilterHari);
                 const matchRuang = (currentFilterRuang === "Semua" || item.ruang === currentFilterRuang);
                 return matchProdi && matchHari && matchRuang;
             });
+
 
             if (filtered.length === 0) {
                 container.innerHTML = `<p style="color: #a0aec0; grid-column: 1/-1; text-align: center; padding: 30px;">Belum ada jadwal tersimpan untuk Program Studi ini atau jadwal telah kedaluwarsa.</p>`;
