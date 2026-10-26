@@ -446,6 +446,109 @@
                 }
             }
         }
+
+        function switchTab(tab) {
+            const viewJadwal = document.getElementById("viewJadwal");
+            const viewMengajar = document.getElementById("viewMengajar");
+            const viewDosen = document.getElementById("viewDosen");
+            
+            const btnJadwal = document.getElementById("tabJadwalBtn");
+            const btnMengajar = document.getElementById("tabMengajarBtn");
+            const btnDosen = document.getElementById("tabDosenBtn");
+
+            // Sembunyikan semua view
+            viewJadwal.style.display = "none";
+            viewMengajar.style.display = "none";
+            viewDosen.style.display = "none";
+
+            // Reset tombol
+            btnJadwal.style.backgroundColor = "transparent"; btnJadwal.style.color = "#a0aec0";
+            btnMengajar.style.backgroundColor = "transparent"; btnMengajar.style.color = "#a0aec0";
+            btnDosen.style.backgroundColor = "transparent"; btnDosen.style.color = "#a0aec0";
+
+            if (tab === 'jadwal') {
+                viewJadwal.style.display = "block";
+                btnJadwal.style.backgroundColor = "#3b82f6"; btnJadwal.style.color = "white";
+            } else if (tab === 'mengajar') {
+                viewMengajar.style.display = "block";
+                btnMengajar.style.backgroundColor = "#3b82f6"; btnMengajar.style.color = "white";
+                inisialisasiDropdownDosenMengajar();
+            } else if (tab === 'dosen') {
+                viewDosen.style.display = "block";
+                btnDosen.style.backgroundColor = "#3b82f6"; btnDosen.style.color = "white";
+                renderDosen();
+            }
+        }
+
+        async function inisialisasiDropdownDosenMengajar() {
+            const daftarJadwal = await ambilDataJadwalOnline();
+            const selectDosen = document.getElementById("selectDosenMengajar");
+            
+            const setDosen = [...new Set(daftarJadwal.map(item => item.dosen))].filter(Boolean);
+            
+            selectDosen.innerHTML = '<option value="">-- Pilih Nama Dosen Terlebih Dahulu --</option>';
+            setDosen.sort().forEach(nama => {
+                const opt = document.createElement("option");
+                opt.value = nama;
+                opt.textContent = nama;
+                selectDosen.appendChild(opt);
+            });
+        }
+
+        async function renderJadwalMengajar() {
+            const container = document.getElementById("mengajarContainer");
+            const selectedDosen = document.getElementById("selectDosenMengajar").value;
+            container.innerHTML = "";
+
+            if (!selectedDosen) {
+                container.innerHTML = `<p style="color: #a0aec0; grid-column: 1/-1; text-align: center; padding: 30px; font-style: italic;">Silakan pilih nama Dosen di atas terlebih dahulu.</p>`;
+                return;
+            }
+
+            const daftarJadwal = await ambilDataJadwalOnline();
+            
+            // Pencarian fleksibel walau nama dosen kurang lengkap / tidak sama persis
+            const filtered = daftarJadwal.filter(item => {
+                if (!item.dosen) return false;
+                return item.dosen.toUpperCase().includes(selectedDosen.toUpperCase()) || 
+                       selectedDosen.toUpperCase().includes(item.dosen.toUpperCase());
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p style="color: #a0aec0; grid-column: 1/-1; text-align: center; padding: 30px;">Tidak ada jadwal mengajar ditemukan untuk dosen ini.</p>`;
+                return;
+            }
+
+            // Urutkan berdasarkan jam
+            filtered.sort((a, b) => (a.jam || "").trim().localeCompare((b.jam || "").trim()));
+
+            filtered.forEach(item => {
+                let actionBtn = `<span style="font-size: 12px; color: #a0aec0; font-style: italic;">Kelas Offline</span>`;
+                if (item.isZoom || item.ruang.toLowerCase().includes("http") || item.ruang.toLowerCase().includes("zoom")) {
+                    actionBtn = `<a href="${item.ruang}" target="_blank" style="background-color: #2563eb; color: white; padding: 6px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 500;">Zoom</a>`;
+                }
+
+                const card = document.createElement("div");
+                card.style.cssText = "background-color: #161922; border: 1px solid #1e2230; border-radius: 14px; padding: 20px; color: #ffffff; display: flex; flex-direction: column; gap: 10px; position: relative;";
+                
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="background-color: #3b82f6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">${item.hari}</span>
+                        <span style="font-size: 12px; color: #34d399;"><i class="fa-regular fa-calendar"></i> ${item.tanggal || '-'}</span>
+                    </div>
+                    <span style="position: absolute; top: 50px; right: 20px; font-size: 13px; color: #a0aec0;"><i class="fa-regular fa-clock"></i> ${item.jam}</span>
+                    <h3 style="margin: 5px 0 0 0; font-size: 18px; font-weight: 600;">${item.matkul}</h3>
+                    <p style="margin: 0; font-size: 14px; color: #cbd5e1;"><i class="fa-solid fa-graduation-cap"></i> Prodi: ${item.prodi}</p>
+                    <p style="margin: 0; font-size: 14px; color: #cbd5e1;"><i class="fa-solid fa-location-dot"></i> Ruang: ${item.ruang}</p>
+                    <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; padding-top: 12px; border-top: 1px solid #1e2230;">
+                        ${actionBtn}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        
     </script>
 </body>
 </html>
