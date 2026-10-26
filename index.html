@@ -147,7 +147,7 @@
 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: bold; color: #a0aec0; margin-bottom: 5px; text-transform: uppercase;">Cari / Pilih Dosen:</label>
-                <input type="text" id="inputDosenMengajar" list="daftarDosenList" oninput="renderJadwalMengajar()" placeholder="Ketik nama dosen (misal: Aang)..." style="width: 100%; max-width: 400px; padding: 10px; border-radius: 8px; border: 1px solid #1e2230; background-color: #161922; color: white; font-size: 14px;">
+                <input type="text" id="inputDosenMengajar" list="daftarDosenList" oninput="renderJadwalMengajar()" placeholder="Ketik nama dosen (misal: Yudi:))..." style="width: 100%; max-width: 400px; padding: 10px; border-radius: 8px; border: 1px solid #1e2230; background-color: #161922; color: white; font-size: 14px;">
                 <datalist id="daftarDosenList">
                     <!-- Pilihan nama dosen akan masuk otomatis di sini -->
                 </datalist>
@@ -160,19 +160,25 @@
         <!-- ================= FOOTER (COPYRIGHT & TOMBOL DONASI) ================= -->
         <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #1e2230; display: flex; flex-direction: column; align-items: center; gap: 15px; text-align: center;">
             
-            <!-- Tombol Donasi WhatsApp -->
-            <a href="https://wa.me/+6287715079335" target="_blank" style="background-color: #25d366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); transition: 0.2s;">
-                <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Donasi :)
-            </a>
+            <!-- Container Sejajar: Tombol Donasi & View Count -->
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px;">
+                <!-- Tombol Donasi WhatsApp -->
+                <a href="https://wa.me/+6287715079335" target="_blank" style="background-color: #25d366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); transition: 0.2s;">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Donasi :)
+                </a>
+
+                <!-- Indikator View Count -->
+                <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #a0aec0; background-color: #161922; padding: 10px 16px; border-radius: 30px; border: 1px solid #1e2230;">
+                    <i class="fa-solid fa-eye" style="color: #3b82f6;"></i>
+                    <span>Dilihat: <strong id="viewCountText" style="color: #ffffff;">...</strong> kali</span>
+                </div>
+            </div>
 
             <!-- Copyright & Link Instagram -->
             <p style="margin: 0; font-size: 13px; color: #a0aec0;">
                 Copyright@<a href="https://www.instagram.com/figuringexistence" target="_blank" style="color: #8ab4f8; text-decoration: none; font-weight: 600;">YudiTIF</a>
             </p>
         </div>
-
-    </div>
-
     <script src="dosen.js"></script>
 
     <script>
